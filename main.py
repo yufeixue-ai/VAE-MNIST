@@ -25,8 +25,10 @@ if __name__ == '__main__':
                         help='input image size (default: 784)')
     parser.add_argument('--h-dim', type=int, default=400, metavar='h-dim',
                         help='hidden dimension (default: 400)')
-    parser.add_argument('--z-dim', type=int, default=20, metavar='z-dim',
+    parser.add_argument('--latent-dim', type=int, default=20, metavar='z-dim',
                         help='latent dimension (default: 20)')
+    parser.add_argument('--z-dim', type=int, default=2, metavar='z-dim',
+                        help='latent dimension (default: 2)')
     # data arguments
     parser.add_argument('--data-dir', type=str, default='./data', metavar='data-dir',
                         help='data directory (default: ./data)')
@@ -67,20 +69,20 @@ if __name__ == '__main__':
                                    ])),
         batch_size=args.batch_size, shuffle=False)   
     # model
-    model = VAE(args.image_size, args.h_dim, args.z_dim).to(device)
+    model = VAE(args.image_size, args.h_dim, args.latent_dim, args.z_dim).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     
     for epoch in range(1, args.epochs + 1):
         train(model, epoch, train_loader, optimizer, args.log_interval, device)
         test(model, epoch, test_loader, device)
         with torch.no_grad():
-            if epoch % 100 == 0:
+            if epoch % 500 == 0:
                 # sample = torch.randn(64, args.z_dim).to(device)
-                sample = torch.randn(64, 2).to(device)
+                sample = torch.randn(64, args.z_dim).to(device)
                 sample = model.decode(sample).cpu()
-                save_image(sample.view(64, 1, 28, 28), './out/figs/sample_' + str(epoch) + '.png')
+                save_image(sample.view(64, 1, 28, 28), './out/vae/sample_' + str(epoch) + '.png')
     
-    torch.save(model.state_dict(), './out/vae.pth')
+    torch.save(model.state_dict(), './out/vae/vae_org.pth')
 
 
 

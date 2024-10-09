@@ -6,7 +6,7 @@ LATENT_DIM=20
 Z_DIM=2
 GPU=2,3
 
-python eval.py \
+python compress_vae_plus.py \
   --image-size $IMAGE_SIZE \
   --h-dim $H_DIM \
   --latent-dim $LATENT_DIM \

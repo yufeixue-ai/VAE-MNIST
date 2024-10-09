@@ -22,7 +22,9 @@ if __name__ == '__main__':
                         help='input image size (default: 784)')
     parser.add_argument('--h-dim', type=int, default=400, metavar='h-dim',
                         help='hidden dimension (default: 400)')
-    parser.add_argument('--z-dim', type=int, default=20, metavar='z-dim',
+    parser.add_argument('--latent-dim', type=int, default=20, metavar='latent-dim',
+                        help='latent dimension (default: 20)')
+    parser.add_argument('--z-dim', type=int, default=2, metavar='z-dim',
                         help='latent dimension (default: 20)')
     parser.add_argument('--gpu', type=str, default=0, metavar='gpu',
                         help='GPU id to use (default: 0)')
@@ -33,7 +35,7 @@ if __name__ == '__main__':
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     print('Using device:', device)
     
-    model = VAE(args.image_size, args.h_dim, args.z_dim).to(device)
+    model = VAE(args.image_size, args.h_dim, args.latent_dim, args.z_dim).to(device)
     model.load_state_dict(torch.load('./out/vae.pth', map_location=device))
 
     scale = 5
